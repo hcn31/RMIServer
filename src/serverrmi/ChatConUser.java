@@ -1,13 +1,10 @@
+//HCN
 package serverrmi;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
-/**
- *
- * @author Efraim Rodrigues
- */
 public class ChatConUser extends java.rmi.server.UnicastRemoteObject implements Serializable, ChatConUserInterface {
 
     private final String publicKey;

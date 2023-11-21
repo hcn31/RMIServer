@@ -1,13 +1,10 @@
+//HCN
 package serverrmi;
 
 import java.rmi.Naming;
 import java.rmi.Remote;
 import java.rmi.registry.LocateRegistry;
 
-/**
- *
- * @author Efraim Rodrigues
- */
 public class ChatConServidor {
 
     public ChatConServidor() {
