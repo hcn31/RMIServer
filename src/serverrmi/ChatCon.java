@@ -1,3 +1,4 @@
+//HCN
 package serverrmi;
 
 import java.nio.charset.Charset;
@@ -16,41 +17,37 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 
-/**
- *
- * @author Efraim Rodrigues
- */
 public class ChatCon extends java.rmi.server.UnicastRemoteObject implements ChatConInterface {
 
-    private final HashMap<String, ChatConUserInterface> usuarios;
+    private final HashMap<String, ChatConUserInterface> users;
 
     public ChatCon() throws RemoteException {
         super();
-        this.usuarios = new HashMap<String, ChatConUserInterface>();
+        this.users = new HashMap<String, ChatConUserInterface>();
     }
 
-    public void enviarMensagem(String user, String mensagem) throws RemoteException {
-        usuarios.get(decrypt(user)).enviarMensagem(mensagem);
+    public void envoyerMessage(String user, String mensagem) throws RemoteException {
+        users.get(decrypt(user)).enviarMensagem(mensagem);
     }
 
     @Override
-    public ChatConUserInterface adicionaUsuario(String username, String publicKey) throws RemoteException {
+    public ChatConUserInterface ajouterUser(String username, String publicKey) throws RemoteException {
         ChatConUserInterface user = new ChatConUser(decrypt(publicKey));
-        this.usuarios.put(decrypt(username), user);
+        this.users.put(decrypt(username), user);
         System.out.print(decrypt(username) + " logou.\n");
         return user;
     }
 
     @Override
-    public void removeUsuario(String username) throws RemoteException {
-        this.usuarios.remove(decrypt(username));
+    public void supprimerUser(String username) throws RemoteException {
+        this.users.remove(decrypt(username));
         System.out.println(username + " saiu.\n");
     }
     
     @Override
-    public ArrayList<String> getUsuarios() throws RemoteException {
+    public ArrayList<String> getUsers() throws RemoteException {
         ArrayList<String> ret = new ArrayList<String>();
-        usuarios.keySet().stream().forEach((key) -> {
+        users.keySet().stream().forEach((key) -> {
             ret.add(encrypt(key));
         });
         return ret;
@@ -58,12 +55,12 @@ public class ChatCon extends java.rmi.server.UnicastRemoteObject implements Chat
     
     @Override
     public String getPublicKey(String username) throws RemoteException {
-        return encrypt(usuarios.get(decrypt(username)).getPublicKey());
+        return encrypt(users.get(decrypt(username)).getPublicKey());
     }
 
     @Override
     public boolean isOnline(String username) throws RemoteException {
-        return usuarios.containsKey(decrypt(username));
+        return users.containsKey(decrypt(username));
     }
 
     private String decrypt(String text) {

@@ -36,10 +36,7 @@ import javax.crypto.spec.SecretKeySpec;
 import serverrmi.ChatConInterface;
 import serverrmi.ChatConUserInterface;
 
-/**
- *
- * @author Efraim Rodrigues
- */
+
 public class ChatConCliente implements Runnable, Serializable {
 
     private String nome;
@@ -149,7 +146,7 @@ public class ChatConCliente implements Runnable, Serializable {
         try {
             if (msg.equalsIgnoreCase("@whoisonline")) {
                 String lista = "Safe Chat:\n";
-                for (String user : chat.getUsuarios()) {
+                for (String user : chat.getUsers()) {
                     lista += decrypt(user) + " está online.\n";
                 }
                 mensagens.add(lista);
@@ -158,8 +155,8 @@ public class ChatConCliente implements Runnable, Serializable {
             } else if (msg.equalsIgnoreCase("@help") || msg.equalsIgnoreCase("@")) {
                 mensagens.add("Safe Chat: \nDigite @whoisonline para ver os usuários online.\nDigite @tchau para se despedir e sair do chat.");
             } else {
-                for (String user : chat.getUsuarios()) {
-                    chat.enviarMensagem(user, encryptMessage(nome + ": " + msg,getKeyFromString(chat.getPublicKey(user)))); //THIS WILL BE ENCRYPTED WITH PUBLIC KEY FROM USER
+                for (String user : chat.getUsers()) {
+                    chat.envoyerMessage(user, encryptMessage(nome + ": " + msg,getKeyFromString(chat.getPublicKey(user)))); //THIS WILL BE ENCRYPTED WITH PUBLIC KEY FROM USER
                 }
             }
         } catch (RemoteException ex) {
@@ -188,7 +185,7 @@ public class ChatConCliente implements Runnable, Serializable {
         ArrayList<String> ret = new ArrayList<>();
         try {
             synchronized (chat) {
-                ArrayList<String> temp = chat.getUsuarios();
+                ArrayList<String> temp = chat.getUsers();
 
                 for (String user : temp) {
                     ret.add(decrypt(user));
@@ -237,7 +234,7 @@ public class ChatConCliente implements Runnable, Serializable {
             
             String pKey = publicKey.getModulus().toString() + "|" + publicKey.getPublicExponent().toString();
             
-            user = chat.adicionaUsuario(encrypt(nome), encrypt(pKey)); //O segundo campo deve ser a chave publica deste usuario.
+            user = chat.ajouterUser(encrypt(nome), encrypt(pKey)); //O segundo campo deve ser a chave publica deste usuario.
 
             enviaMensagem("Je suis connecté !");
         } catch (RemoteException | NoSuchAlgorithmException ex) {
@@ -247,7 +244,7 @@ public class ChatConCliente implements Runnable, Serializable {
 
     private void removeUsuario(String nome) {
         try {
-            chat.removeUsuario(encrypt(nome));
+            chat.supprimerUser(encrypt(nome));
         } catch (RemoteException ex) {
             Logger.getLogger(ChatConCliente.class.getName()).log(Level.SEVERE, null, ex);
         }
