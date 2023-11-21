@@ -1,3 +1,4 @@
+/// Mehdi 
 package chatrmi;
 
 import java.io.Serializable;
@@ -39,7 +40,7 @@ import serverrmi.ChatConUserInterface;
  *
  * @author Efraim Rodrigues
  */
-public class ChatConCliente extends Thread implements Runnable, Serializable {
+public class ChatConCliente implements Runnable, Serializable {
 
     private String nome;
     private static ChatConInterface chat;

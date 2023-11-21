@@ -1,3 +1,5 @@
+/// Mehdi 
+
 package chatrmi;
 
 import java.text.DateFormat;
@@ -45,7 +47,7 @@ import javafx.stage.WindowEvent;
  */
 
 
-//// tttttttttttttttttessssst 
+
 public class ChatConApp extends Application {
 	 private HBox userContainer;
     private ChatConCliente cliente;
