@@ -26,22 +26,22 @@ public class ChatCon extends java.rmi.server.UnicastRemoteObject implements Chat
         this.users = new HashMap<String, ChatConUserInterface>();
     }
 
-    public void envoyerMessage(String user, String mensagem) throws RemoteException {
-        users.get(decrypt(user)).enviarMensagem(mensagem);
+    public void envoyerMessage(String user, String message) throws RemoteException {
+        users.get(decrypt(user)).envoyerMessage(message);
     }
 
     @Override
     public ChatConUserInterface ajouterUser(String username, String publicKey) throws RemoteException {
         ChatConUserInterface user = new ChatConUser(decrypt(publicKey));
         this.users.put(decrypt(username), user);
-        System.out.print(decrypt(username) + " logou.\n");
+        System.out.print(decrypt(username) + " Hey, I am  here\n");
         return user;
     }
 
     @Override
     public void supprimerUser(String username) throws RemoteException {
         this.users.remove(decrypt(username));
-        System.out.println(username + " saiu.\n");
+        System.out.println(username + " bye, exit\n");
     }
     
     @Override
@@ -66,9 +66,9 @@ public class ChatCon extends java.rmi.server.UnicastRemoteObject implements Chat
     private String decrypt(String text) {
         String ret = "";
         try {
-            byte[] senha = new String("seasideseasideSS").getBytes();
+            byte[] mdp = new String("ESSAIDIHASSANI").getBytes();
 
-            Key key = new SecretKeySpec(senha, "AES");
+            Key key = new SecretKeySpec(mdp, "AES");
 
             Cipher cipher = Cipher.getInstance("AES");
             cipher.init(Cipher.DECRYPT_MODE, key);
@@ -83,9 +83,9 @@ public class ChatCon extends java.rmi.server.UnicastRemoteObject implements Chat
     private String encrypt(String text) {
         String ret = "";
         try {
-            byte[] senha = new String("seasideseasideSS").getBytes();
+            byte[] mdp = new String("ESSAIDIHASSANI").getBytes();
             
-            Key key = new SecretKeySpec(senha, "AES");
+            Key key = new SecretKeySpec(mdp, "AES");
             
             Cipher cipher = Cipher.getInstance("AES");
             cipher.init(Cipher.ENCRYPT_MODE, key);
@@ -93,17 +93,9 @@ public class ChatCon extends java.rmi.server.UnicastRemoteObject implements Chat
             byte[] encryptedText = cipher.doFinal(text.getBytes());
             
             ret = new String(Base64.getEncoder().encode(encryptedText),Charset.forName("UTF8"));
-        } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(ChatCon.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NoSuchPaddingException ex) {
-            Logger.getLogger(ChatCon.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvalidKeyException ex) {
-            Logger.getLogger(ChatCon.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalBlockSizeException ex) {
-            Logger.getLogger(ChatCon.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (BadPaddingException ex) {
-            Logger.getLogger(ChatCon.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } catch (Exception ex) {
+          System.out.println(ex.getStackTrace());
+        } 
         return ret;
     }
 

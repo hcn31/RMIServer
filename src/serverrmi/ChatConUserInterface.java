@@ -7,8 +7,8 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 public interface ChatConUserInterface extends Remote,Serializable {
-    abstract void enviarMensagem(String mensagem) throws RemoteException;
-    abstract ArrayList<String> getMensagens() throws RemoteException;
+    abstract void envoyerMessage(String mensagem) throws RemoteException;
+    abstract ArrayList<String> getMessages() throws RemoteException;
     abstract String getPublicKey() throws RemoteException;
-    abstract Integer getContador() throws RemoteException;
+    abstract Integer getCounter() throws RemoteException;
 }

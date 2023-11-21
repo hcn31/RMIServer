@@ -15,10 +15,10 @@ public class ChatConServidor {
             LocateRegistry.createRegistry(1099);
             
             ChatConInterface server = new ChatCon();
-            Naming.bind("ServidorChat", (Remote) server);
+            Naming.bind("myServer", (Remote) server);
             System.out.println("Server online.");
         } catch (Exception e) {
-            System.out.println("Trouble: " + e.toString());
+            System.out.println(e.getStackTrace());
         }
     }
 
