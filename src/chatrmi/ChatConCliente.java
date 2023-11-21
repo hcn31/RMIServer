@@ -39,13 +39,13 @@ import serverrmi.ChatConUserInterface;
 
 public class ChatConCliente implements Runnable, Serializable {
 
-    private String nome;
+    private String nom;
     private static ChatConInterface chat;
     private static ChatConUserInterface user;
 
     private String encAlgo = "AES";
     private static Key key;
-    private byte[] senha = new String("seasideseasideSS").getBytes();
+    private byte[] mdp = new String("ESSAIDIHASSANI").getBytes();
     
     private KeyPair keyPair;
 
@@ -56,41 +56,31 @@ public class ChatConCliente implements Runnable, Serializable {
      */
 
     public ChatConCliente() {
-        nome = "";
+        nom = "";
 
         try {
             if (this.chat == null) {
-                this.chat = (ChatConInterface) Naming.lookup("rmi://localhost:1099/ServidorChat");
+                this.chat = (ChatConInterface) Naming.lookup("rmi://localhost:1099/myServer");
             }
 
-            key = new SecretKeySpec(senha, encAlgo);
+            key = new SecretKeySpec(mdp, encAlgo);
 
-        } catch (NotBoundException | MalformedURLException | RemoteException ex) {
-            Logger.getLogger(ChatConCliente.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+           System.err.println(ex.getStackTrace());
         }
 
     }
 
-    /**
-     *
-     * @return
-     */
-    public String getNome() {
-        return nome;
+   
+    public String getNom() {
+        return nom;
     }
 
-    /**
-     *
-     * @param nome
-     */
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setNom(String name) {
+        this.nom = name;
     }
 
-    /**
-     *
-     * @return
-     */
+   
     public String getNewMessage() {
         String ret = "";
         if (mensagens.size() > 0) {
@@ -141,7 +131,7 @@ public class ChatConCliente implements Runnable, Serializable {
      * @param msg
      */
     public void enviaMensagem(String msg) {
-        String msgFinal = this.nome + ": " + msg + "\n";
+        String msgFinal = this.nom + ": " + msg + "\n";
 
         try {
             if (msg.equalsIgnoreCase("@whoisonline")) {
@@ -156,7 +146,7 @@ public class ChatConCliente implements Runnable, Serializable {
                 mensagens.add("Safe Chat: \nDigite @whoisonline para ver os usuários online.\nDigite @tchau para se despedir e sair do chat.");
             } else {
                 for (String user : chat.getUsers()) {
-                    chat.envoyerMessage(user, encryptMessage(nome + ": " + msg,getKeyFromString(chat.getPublicKey(user)))); //THIS WILL BE ENCRYPTED WITH PUBLIC KEY FROM USER
+                    chat.envoyerMessage(user, encryptMessage(nom + ": " + msg,getKeyFromString(chat.getPublicKey(user)))); //THIS WILL BE ENCRYPTED WITH PUBLIC KEY FROM USER
                 }
             }
         } catch (RemoteException ex) {
@@ -222,7 +212,7 @@ public class ChatConCliente implements Runnable, Serializable {
      */
     public void login(String nome) {
         try {
-            setNome(nome);
+            setNom(nome);
 
             KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
             generator.initialize(1024);
@@ -256,7 +246,7 @@ public class ChatConCliente implements Runnable, Serializable {
     public void exit() {
         enviaMensagem("Je suis deconnecté !");
 
-        removeUsuario(getNome());
+        removeUsuario(getNom());
 
         Platform.exit();
         System.exit(0);
