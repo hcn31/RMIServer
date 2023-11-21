@@ -263,7 +263,7 @@ public class ChatConApp extends Application {
 
     public void enviar() {
         if (msgTextArea.getText().trim().length() > 0) {
-            cliente.enviaMensagem(msgTextArea.getText().trim());
+            cliente.envoyerMessage(msgTextArea.getText().trim());
         }
     }
 

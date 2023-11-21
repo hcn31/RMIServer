@@ -8,32 +8,28 @@ import java.util.ArrayList;
 public class ChatConUser extends java.rmi.server.UnicastRemoteObject implements Serializable, ChatConUserInterface {
 
     private final String publicKey;
-    private Integer contador;
-    private final ArrayList<String> mensagens;
+    private Integer counter;
+    private final ArrayList<String> messages;
     
     ChatConUser (String publicKey) throws RemoteException {
         super();
-        mensagens = new ArrayList<>();
-        contador = 0;
+        messages = new ArrayList<>();
+        counter = 0;
         this.publicKey = publicKey;
     }
 
     @Override
-    public void enviarMensagem(String mensagem) throws RemoteException {
-        synchronized (mensagens) {
-            if (mensagens.size() > 20) { //Isto garante que a ArrayList<String> terá no máximo 20 mensagens. Isto é extremamente importante porque evita que o tamanho do objeto cresça indefinidamente.
-                mensagens.remove(0);
-            }
-
-            this.contador++;
-            mensagens.add(mensagem);
+    public void envoyerMessage(String mensagem) throws RemoteException {
+        synchronized (messages) {
+            this.counter++;
+            messages.add(mensagem);
             System.out.println(mensagem);
         }
     }
     
     @Override
-    public ArrayList<String> getMensagens() throws RemoteException {
-        return mensagens;
+    public ArrayList<String> getMessages() throws RemoteException {
+        return messages;
     }
 
     @Override
@@ -42,8 +38,8 @@ public class ChatConUser extends java.rmi.server.UnicastRemoteObject implements 
     }
 
     @Override
-    public Integer getContador() throws RemoteException {
-        return contador;
+    public Integer getCounter() throws RemoteException {
+        return counter;
     }
 
     
