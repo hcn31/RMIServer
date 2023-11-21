@@ -43,6 +43,9 @@ import javafx.stage.WindowEvent;
  *
  * @author Efraim Rodrigues
  */
+
+
+//// tttttttttttttttttessssst 
 public class ChatConApp extends Application {
 	 private HBox userContainer;
     private ChatConCliente cliente;
