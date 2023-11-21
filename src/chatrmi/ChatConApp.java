@@ -41,10 +41,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-/**
- *
- * @author Efraim Rodrigues
- */
+
 
 
 
@@ -54,12 +51,10 @@ public class ChatConApp extends Application {
     private TextArea msgTextArea;
     private Button buttonEnviar;
     private ScrollPane scrollMsg;
-    //Label mainMsg;
     private String lastClntMessage;
     private VBox root;
     private Map<String, VBox> connectedUsers;
-    //private GridPane messagesOther;
-    //private GridPane messagesMy;
+   
     private Integer i = 0;
 
     public ChatConApp() {
@@ -159,7 +154,7 @@ public class ChatConApp extends Application {
 
                     String outro = lastClntMessage.substring(0, lastClntMessage.indexOf(":"));
 
-                    if (outro.equals(cliente.getNome())) {
+                    if (outro.equals(cliente.getNom())) {
                         newMessage.setPadding(new Insets(0, 1, 0, 0));
                         
                         newMessage.setStyle("-fx-background-color: #DEB992; " +
@@ -268,7 +263,7 @@ public class ChatConApp extends Application {
 
     public void enviar() {
         if (msgTextArea.getText().trim().length() > 0) {
-            cliente.enviaMensagem(msgTextArea.getText().trim());
+            cliente.envoyerMessage(msgTextArea.getText().trim());
         }
     }
 
@@ -386,7 +381,7 @@ public class ChatConApp extends Application {
         border.setBottom(grid);
         border.setCenter(scrollMsg);
 
-        primaryStage.setTitle("Chat Application - "+cliente.getNome());
+        primaryStage.setTitle("Chat Application - "+cliente.getNom());
         primaryStage.setScene(scene);
         primaryStage.show();
 
