@@ -16,7 +16,7 @@ public class ChatConServidor {
             
             ChatConInterface server = new ChatCon();
             Naming.bind("myServer", (Remote) server);
-            System.out.println("Server online.");
+            System.out.println("Server running...");
         } catch (Exception e) {
             System.out.println(e.getStackTrace());
         }
