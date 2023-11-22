@@ -37,7 +37,7 @@ import serverrmi.ChatConInterface;
 import serverrmi.ChatConUserInterface;
 
 
-public class ChatConCliente implements Runnable, Serializable {
+public class ChatConCliente extends Thread implements Runnable, Serializable {
 
     private String nom;
     private static ChatConInterface chat;
@@ -45,7 +45,7 @@ public class ChatConCliente implements Runnable, Serializable {
 
     private String encAlgo = "AES";
     private static Key key;
-    private byte[] mdp = new String("ESSAIDIHASSANI").getBytes();
+    private byte[] mdp = new String("seasideseasideSS").getBytes();
     
     private KeyPair keyPair;
 
@@ -119,10 +119,7 @@ public class ChatConCliente implements Runnable, Serializable {
         }
     }
     
-    /**
-     *
-     * @param msg
-     */
+ 
     public void envoyerMessage(String msg) {
         String msgFinal = this.nom + ": " + msg + "\n";
 

@@ -273,18 +273,13 @@ public class ChatConApp extends Application {
 
         Optional<String> result = null;
         boolean validUsername = false;
-        while (!validUsername) {
             result = dialog.showAndWait();
 
             if (result.isPresent()) {
                 nom = result.get();
-            } else {
-                Platform.exit();
-                System.exit(0);
-            }
+            } 
 
-         
-        }
+           
 
         user.login(nom);
 

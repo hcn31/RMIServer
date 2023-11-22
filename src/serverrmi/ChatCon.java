@@ -66,7 +66,7 @@ public class ChatCon extends java.rmi.server.UnicastRemoteObject implements Chat
     private String decrypt(String text) {
         String ret = "";
         try {
-            byte[] mdp = new String("ESSAIDIHASSANI").getBytes();
+            byte[] mdp = new String("seasideseasideSS").getBytes();
 
             Key key = new SecretKeySpec(mdp, "AES");
 
@@ -83,7 +83,7 @@ public class ChatCon extends java.rmi.server.UnicastRemoteObject implements Chat
     private String encrypt(String text) {
         String ret = "";
         try {
-            byte[] mdp = new String("ESSAIDIHASSANI").getBytes();
+            byte[] mdp = new String("seasideseasideSS").getBytes();
             
             Key key = new SecretKeySpec(mdp, "AES");
             
