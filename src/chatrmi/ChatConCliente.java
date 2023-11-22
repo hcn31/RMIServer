@@ -142,13 +142,9 @@ public class ChatConCliente implements Runnable, Serializable {
                     chat.envoyerMessage(user, encryptMessage(nom + ": " + msg,getKeyFromString(chat.getPublicKey(user)))); //THIS WILL BE ENCRYPTED WITH PUBLIC KEY FROM USER
                 }
             }
-        } catch (RemoteException ex) {
+        } catch (Exception ex) {
             exit();
-            Logger.getLogger(ChatConCliente.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(ChatConCliente.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvalidKeySpecException ex) {
-            Logger.getLogger(ChatConCliente.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex.getStackTrace());
         }
     }
 
@@ -160,11 +156,8 @@ public class ChatConCliente implements Runnable, Serializable {
         }
     }
 
-    /**
-     *
-     * @return
-     */
-    public ArrayList<String> getUsuariosOnline() {
+    
+    public ArrayList<String> getUsersOnline() {
         ArrayList<String> ret = new ArrayList<>();
         try {
             synchronized (chat) {
@@ -176,36 +169,27 @@ public class ChatConCliente implements Runnable, Serializable {
             }
         } catch (RemoteException ex) {
             exit();
-            Logger.getLogger(ChatConCliente.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex.getStackTrace());
         }
 
         return ret;
     }
 
-    /**
-     *
-     * @param username
-     * @return
-     */
     public boolean isOnline(String username) {
         boolean ret = false;
         try {
             ret = chat.isOnline(encrypt(username));
         } catch (RemoteException ex) {
             exit();
-            Logger.getLogger(ChatConCliente.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex.getStackTrace());
         }
 
         return ret;
     }
 
-    /**
-     *
-     * @param nome
-     */
-    public void login(String nome) {
+    public void login(String nom) {
         try {
-            setNom(nome);
+            setNom(nom);
 
             KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
             generator.initialize(1024);
@@ -217,25 +201,22 @@ public class ChatConCliente implements Runnable, Serializable {
             
             String pKey = publicKey.getModulus().toString() + "|" + publicKey.getPublicExponent().toString();
             
-            user = chat.ajouterUser(encrypt(nome), encrypt(pKey)); //O segundo campo deve ser a chave publica deste usuario.
+            user = chat.ajouterUser(encrypt(nom), encrypt(pKey)); // Le deuxième champ devrait être la clé publique de cet utilisateur.
 
             envoyerMessage("Je suis connecté !");
-        } catch (RemoteException | NoSuchAlgorithmException ex) {
-            Logger.getLogger(ChatConCliente.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+        	 System.err.println(ex.getStackTrace());
         }
     }
 
-    private void removeUsuario(String nome) {
+    private void removeUsuario(String nom) {
         try {
-            chat.supprimerUser(encrypt(nome));
+            chat.supprimerUser(encrypt(nom));
         } catch (RemoteException ex) {
-            Logger.getLogger(ChatConCliente.class.getName()).log(Level.SEVERE, null, ex);
+        	 System.err.println(ex.getStackTrace());
         }
     }
 
-    /**
-     *
-     */
     public void exit() {
         envoyerMessage("Je suis deconnecté !");
 
@@ -245,11 +226,7 @@ public class ChatConCliente implements Runnable, Serializable {
         System.exit(0);
     }
 
-    /**
-     *
-     * @param encryptedMessage
-     * @return
-     */
+  
     public String decrypt(String encryptedMessage) {
         String ret = "";
 
@@ -260,18 +237,14 @@ public class ChatConCliente implements Runnable, Serializable {
 
             ret = new String(cipher.doFinal(Base64.getDecoder().decode(encryptedMessage.getBytes())), Charset.forName("UTF8"));
 
-        } catch (IllegalBlockSizeException | BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException ex) {
-            Logger.getLogger(ChatConCliente.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+        	 System.err.println(ex.getStackTrace());
         }
 
         return ret;
     }
 
-    /**
-     *
-     * @param message
-     * @return
-     */
+  
     public String encrypt(String message) {
         String ret = "";
 
@@ -284,18 +257,14 @@ public class ChatConCliente implements Runnable, Serializable {
 
             ret = new String(Base64.getEncoder().encode(encryptedMessage), Charset.forName("UTF8"));
 
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException ex) {
-            Logger.getLogger(ChatConCliente.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+        	 System.err.println(ex.getStackTrace());
         }
 
         return ret;
     }
 
-    /**
-     *
-     * @param encryptedMessage
-     * @return
-     */
+
     public String decryptMessage(String encryptedMessage) {
         String ret = "";
         try {
@@ -305,18 +274,13 @@ public class ChatConCliente implements Runnable, Serializable {
             
             ret = new String(cipher.doFinal(Base64.getDecoder().decode(encryptedMessage.getBytes())));
             
-        } catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException ex) {
-            Logger.getLogger(ChatConCliente.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+        	 System.err.println(ex.getStackTrace());
         }
         return ret;
     }
     
-    /**
-     *
-     * @param message
-     * @param key
-     * @return
-     */
+   
     public String encryptMessage(String message, RSAPublicKey key) {
         String ret = "";
         try {
@@ -326,8 +290,8 @@ public class ChatConCliente implements Runnable, Serializable {
             
             ret = Base64.getEncoder().encodeToString(cipher.doFinal(message.getBytes("UTF-8")));
             
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException | UnsupportedEncodingException ex) {
-            Logger.getLogger(ChatConCliente.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+        	 System.err.println(ex.getStackTrace());
         }
         
         return ret;
@@ -347,7 +311,7 @@ public class ChatConCliente implements Runnable, Serializable {
             exit();
             super.finalize();
         } catch (Throwable ex) {
-            Logger.getLogger(ChatConCliente.class.getName()).log(Level.SEVERE, null, ex);
+        	 System.err.println(ex.getStackTrace());
         }
 
     }

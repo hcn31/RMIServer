@@ -47,11 +47,11 @@ import javafx.stage.WindowEvent;
 
 public class ChatConApp extends Application {
 	 private HBox userContainer;
-    private ChatConCliente cliente;
+    private ChatConCliente user;
     private TextArea msgTextArea;
-    private Button buttonEnviar;
+    private Button buttonSend;
     private ScrollPane scrollMsg;
-    private String lastClntMessage;
+    private String lastUserMessage;
     private VBox root;
     private Map<String, VBox> connectedUsers;
    
@@ -62,33 +62,28 @@ public class ChatConApp extends Application {
     	 userContainer = new HBox();
          userContainer.setSpacing(10);
          userContainer.setPadding(new Insets(10));
-
-      // Map to keep track of connected users
          connectedUsers = new HashMap<>();
-         
-         
-        
+   
+        user = new ChatConCliente();
 
-        cliente = new ChatConCliente();
-
-        lastClntMessage = "";
-        // Create an ImageView for the icon
+        lastUserMessage = "";
+       
         Image iconImage = new Image(getClass().getResourceAsStream("send.png"));
         ImageView iconImageView = new ImageView(iconImage);
         iconImageView.setFitWidth(25);
         iconImageView.setFitHeight(25);
 
         // Create a button with the icon and text
-        buttonEnviar = new Button("Envoyer", iconImageView);
-        buttonEnviar.setContentDisplay(ContentDisplay.LEFT);
-        buttonEnviar.setOnAction(new EventHandler<ActionEvent>() {
+        buttonSend = new Button("Envoyer", iconImageView);
+        buttonSend.setContentDisplay(ContentDisplay.LEFT);
+        buttonSend.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                enviar();
+                envoyer();
                 msgTextArea.clear();
             }
         });
-        buttonEnviar.setMinSize(100, 20);
+        buttonSend.setMinSize(100, 20);
 
         msgTextArea = new TextArea();
 
@@ -111,7 +106,7 @@ public class ChatConApp extends Application {
 
         msgTextArea.addEventHandler(KeyEvent.KEY_RELEASED, (key) -> {
             if (key.getCode() == KeyCode.ENTER && !key.isShiftDown()) {
-                enviar();
+                envoyer();
                 msgTextArea.clear();
             } else if (key.getCode() == KeyCode.ENTER && key.isShiftDown()) {
                 msgTextArea.setText(msgTextArea.getText() + "\n");
@@ -125,11 +120,11 @@ public class ChatConApp extends Application {
         new AnimationTimer() {
             @Override
             public void handle(long currentNanoTime) {
-                lastClntMessage = cliente.getNewMessage();
+                lastUserMessage = user.getNewMessage();
                 
                 
 
-                if (!lastClntMessage.equals("")) {
+                if (!lastUserMessage.equals("")) {
                     Label newMessage = new Label();
 
                     newMessage.setMaxHeight(Double.MAX_VALUE);
@@ -152,9 +147,9 @@ public class ChatConApp extends Application {
 
                     messageBox.setAlignment(Pos.TOP_LEFT);
 
-                    String outro = lastClntMessage.substring(0, lastClntMessage.indexOf(":"));
+                    String outro = lastUserMessage.substring(0, lastUserMessage.indexOf(":"));
 
-                    if (outro.equals(cliente.getNom())) {
+                    if (outro.equals(user.getNom())) {
                         newMessage.setPadding(new Insets(0, 1, 0, 0));
                         
                         newMessage.setStyle("-fx-background-color: #DEB992; " +
@@ -169,15 +164,15 @@ public class ChatConApp extends Application {
 
                         messageBox.setAlignment(Pos.TOP_RIGHT);
 
-                        newMessage.setText(lastClntMessage.trim().substring(lastClntMessage.indexOf(":") + 2));
+                        newMessage.setText(lastUserMessage.trim().substring(lastUserMessage.indexOf(":") + 2));
                     } else {
                     	
                     		 // Create the main text
-                            Text mainText = new Text(lastClntMessage.trim().split(":")[0]);
+                            Text mainText = new Text(lastUserMessage.trim().split(":")[0]);
                             mainText.setStyle("-fx-font-weight: bold;");
 
                             // Create the subtext
-                            Text subText = new Text(lastClntMessage.trim().split(":")[1]);
+                            Text subText = new Text(lastUserMessage.trim().split(":")[1]);
                            
 
                             // Set the main text and subtext in the Label
@@ -189,7 +184,7 @@ public class ChatConApp extends Application {
                                     "-fx-border-radius: 3px; " +
                                     "-fx-padding: 4px;");
                            
-                            addUser(lastClntMessage.trim().split(":")[0], "user.png");
+                            addUser(lastUserMessage.trim().split(":")[0], "user.png");
                            
                     	
                     }
@@ -231,39 +226,27 @@ public class ChatConApp extends Application {
         if (connectedUsers.containsKey(username)) {
             return;
         }
-        // Load the user icon image
+ 
         Image iconImage = new Image(getClass().getResourceAsStream(iconFilename));
         ImageView iconImageView = new ImageView(iconImage);
         iconImageView.setFitWidth(50);
         iconImageView.setFitHeight(50);
 
-        // Create the label for the user
+
         Label userLabel = new Label(username);
         userLabel.setStyle("-fx-font-weight: bold;");
-        // Create a VBox to hold the icon and label
+     
         VBox userBox = new VBox(iconImageView, userLabel);
         userBox.setAlignment(Pos.CENTER);
-       
-       // userBox.setSpacing(5);
-        //userBox.setPadding(new Insets(5));
-
-        // Add the user VBox to the HBox
         userContainer.getChildren().add(userBox);
         connectedUsers.put(username, userBox);
     }
 
-    private void simulateUserDisconnection(String username) {
-        // Find and remove the user from the HBox
-        userContainer.getChildren().removeIf(node -> {
-            VBox userBox = (VBox) node;
-            Label userLabel = (Label) userBox.getChildren().get(1);
-            return userLabel.getText().equals(username);
-        });
-    }
+ 
 
-    public void enviar() {
+    public void envoyer() {
         if (msgTextArea.getText().trim().length() > 0) {
-            cliente.envoyerMessage(msgTextArea.getText().trim());
+            user.envoyerMessage(msgTextArea.getText().trim());
         }
     }
 
@@ -274,11 +257,11 @@ public class ChatConApp extends Application {
 
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent t) {
-                cliente.exit();
+                user.exit();
             }
         });
 
-        String nome = "";
+        String nom = "";
 
         TextInputDialog dialog = new TextInputDialog("Entrez votre nom ici.");
         Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
@@ -294,31 +277,30 @@ public class ChatConApp extends Application {
             result = dialog.showAndWait();
 
             if (result.isPresent()) {
-                nome = result.get();
+                nom = result.get();
             } else {
                 Platform.exit();
                 System.exit(0);
             }
 
-            if (!nome.equalsIgnoreCase("") && !nome.equalsIgnoreCase("Digite seu nome aqui.") && !cliente.isOnline(nome)) {
+            if (!nom.equalsIgnoreCase("") && !nom.equalsIgnoreCase("Entrez votre nom ici.") && !user.isOnline(nom)) {
                 validUsername = true;
             } else {
-                dialog.setContentText("Este nome é inválido, tente outro.");
+                dialog.setContentText("Entrez un nom valide !!");
             }
         }
 
-        cliente.login(nome);
+        user.login(nom);
 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                synchronized (cliente) {
-                    cliente.run();
+                synchronized (user) {
+                    user.run();
                 }
             }
         }).start();
 
-        //mainTextArea.setEditable(false);
         BorderPane border = new BorderPane();
         Scene scene = new Scene(border, 800, 600);
 
@@ -326,10 +308,10 @@ public class ChatConApp extends Application {
 
         StackPane stack = new StackPane();
 
-        stack.getChildren().addAll(buttonEnviar);
+        stack.getChildren().addAll(buttonSend);
         stack.setAlignment(Pos.CENTER_RIGHT);
-        //stack.setStyle("align: right; margin-right: 0");
-        StackPane.setMargin(buttonEnviar, new Insets(0, 25, 0, 25));
+    
+        StackPane.setMargin(buttonSend, new Insets(0, 25, 0, 25));
         stack.setStyle("-fx-background-color: #336699;");
 
         GridPane grid = new GridPane();
@@ -342,7 +324,6 @@ public class ChatConApp extends Application {
 
         root = new VBox();
 
-        //root.getChildren().addAll(mainMsg);
         root.setStyle("-fx-padding: 10;"
                 + "-fx-border-style: solid inside;"
                 + "-fx-border-width: 2;"
@@ -352,12 +333,9 @@ public class ChatConApp extends Application {
 
         VBox.setVgrow(root, Priority.ALWAYS);
 
-        //root.fillWidthProperty();
-        //root.autosize();
+ 
         scrollMsg.setContent(root);
 
-        //BorderPane msgPane = new BorderPane();
-        //root.getChildren().add(msgPane);
         VBox test = new VBox();
 
         test.setStyle("-fx-padding: 10;"
@@ -375,22 +353,17 @@ public class ChatConApp extends Application {
         scrollMsg.setFitToHeight(true);
         scrollMsg.setFitToWidth(true);
 
-        //root.prefHeightProperty().bind(scrollMsg.heightProperty());
-        //root.prefWidthProperty().bind(scrollMsg.widthProperty());
         border.setTop(userContainer);
         border.setBottom(grid);
         border.setCenter(scrollMsg);
 
-        primaryStage.setTitle("Chat Application - "+cliente.getNom());
+        primaryStage.setTitle("Chat Application - "+user.getNom());
         primaryStage.setScene(scene);
         primaryStage.show();
 
     }
 
-    /**
-     *
-     * @param args
-     */
+ 
     public static void main(String[] args) {
         launch(args);
     }
