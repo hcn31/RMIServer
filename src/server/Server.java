@@ -1,4 +1,3 @@
-//HCN
 package server;
 
 import java.rmi.Naming;

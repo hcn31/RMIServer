@@ -1,4 +1,4 @@
-package chatApplication;
+package server;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.rmi.*;
@@ -15,8 +15,7 @@ import java.util.Base64;
 import java.util.LinkedList;
 import java.util.Queue;
 import javafx.application.Platform;
-import server.Forum;
-import server.User;
+
 import javax.crypto.Cipher;
 // La classe Chat étend Thread et implémente Serializable
 public class Chat extends Thread implements Runnable, Serializable {
@@ -164,7 +163,7 @@ public class Chat extends Thread implements Runnable, Serializable {
     }
 
     // Méthode pour supprimer un utilisateur
-    private void removeUsuario(String nom) {
+    private void supprimerUser(String nom) {
         try {
             forum.supprimerUser(nom);
         } catch (RemoteException ex) {
@@ -175,9 +174,7 @@ public class Chat extends Thread implements Runnable, Serializable {
     // Méthode pour quitter l'application
     public void exit() {
         envoyerMessage("Je suis déconnecté !");
-
-        removeUsuario(getNom());
-
+        supprimerUser(getNom());
         Platform.exit();
         System.exit(0);
     }

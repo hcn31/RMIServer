@@ -1,4 +1,4 @@
-package chatApplication;
+package client;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -34,6 +34,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import server.Chat;
 
 public class ChatApp extends Application {
 	 private HBox userContainer;
