@@ -74,8 +74,8 @@ public class ChatCon extends java.rmi.server.UnicastRemoteObject implements Chat
             cipher.init(Cipher.DECRYPT_MODE, key);
 
             ret = new String(cipher.doFinal(Base64.getDecoder().decode(text.getBytes())), Charset.forName("UTF8"));
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException ex) {
-            Logger.getLogger(ChatCon.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            System.err.println(ex.getStackTrace());
         }
         return ret;
     }

@@ -109,7 +109,7 @@ public class ChatConCliente extends Thread implements Runnable, Serializable {
                 }
 
                 for (; contDiff > cont; cont++) {
-                    this.armazenaMensagem(decryptMessage(msgArray.get(msgArray.size() - (contDiff - cont))));
+                    this.stockMessage(decryptMessage(msgArray.get(msgArray.size() - (contDiff - cont))));
                 }
             }
 
@@ -121,31 +121,18 @@ public class ChatConCliente extends Thread implements Runnable, Serializable {
     
  
     public void envoyerMessage(String msg) {
-        String msgFinal = this.nom + ": " + msg + "\n";
-
         try {
-            if (msg.equalsIgnoreCase("@whoisonline")) {
-                String list = "Safe Chat:\n";
-                for (String user : chat.getUsers()) {
-                    list += decrypt(user) + " está online.\n";
-                }
-                messages.add(list);
-            } else if (msg.equalsIgnoreCase("@tchau")) {
-                exit();
-            } else if (msg.equalsIgnoreCase("@help") || msg.equalsIgnoreCase("@")) {
-                messages.add("Safe Chat: \nDigite @whoisonline para ver os usuários online.\nDigite @tchau para se despedir e sair do chat.");
-            } else {
                 for (String user : chat.getUsers()) {
                     chat.envoyerMessage(user, encryptMessage(nom + ": " + msg,getKeyFromString(chat.getPublicKey(user)))); //THIS WILL BE ENCRYPTED WITH PUBLIC KEY FROM USER
                 }
-            }
+            
         } catch (Exception ex) {
             exit();
             System.err.println(ex.getStackTrace());
         }
     }
 
-    private void armazenaMensagem(String msg) {
+    private void stockMessage(String msg) {
         synchronized (messages) {
             if (!msg.equals("exit")) {
                 messages.add(msg);
