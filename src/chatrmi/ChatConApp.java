@@ -283,11 +283,7 @@ public class ChatConApp extends Application {
                 System.exit(0);
             }
 
-            if (!nom.equalsIgnoreCase("") && !nom.equalsIgnoreCase("Entrez votre nom ici.") && !user.isOnline(nom)) {
-                validUsername = true;
-            } else {
-                dialog.setContentText("Entrez un nom valide !!");
-            }
+         
         }
 
         user.login(nom);
