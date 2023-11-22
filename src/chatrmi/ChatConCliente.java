@@ -59,7 +59,6 @@ public class ChatConCliente implements Runnable, Serializable {
             if (this.chat == null) {
                 this.chat = (ChatConInterface) Naming.lookup("rmi://localhost:1099/myServer");
             }
-
             key = new SecretKeySpec(mdp, encAlgo);
 
         } catch (Exception ex) {
