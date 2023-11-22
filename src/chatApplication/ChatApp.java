@@ -1,7 +1,4 @@
-/// Mehdi 
-
-package chatrmi;
-
+package chatApplication;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -10,7 +7,6 @@ import java.util.Map;
 import java.util.Optional;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -35,19 +31,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-
-
-
-
-public class ChatConApp extends Application {
+public class ChatApp extends Application {
 	 private HBox userContainer;
-    private ChatConCliente user;
+    private Chat user;
     private TextArea msgTextArea;
     private Button buttonSend;
     private ScrollPane scrollMsg;
@@ -57,14 +47,14 @@ public class ChatConApp extends Application {
    
     private Integer i = 0;
 
-    public ChatConApp() {
+    public ChatApp() {
     	
     	 userContainer = new HBox();
          userContainer.setSpacing(10);
          userContainer.setPadding(new Insets(10));
          connectedUsers = new HashMap<>();
    
-        user = new ChatConCliente();
+        user = new Chat();
 
         lastUserMessage = "";
        
@@ -143,8 +133,6 @@ public class ChatConApp extends Application {
 
                     VBox messageBox = new VBox();
                     
-               
-
                     messageBox.setAlignment(Pos.TOP_LEFT);
 
                     String outro = lastUserMessage.substring(0, lastUserMessage.indexOf(":"));
@@ -157,9 +145,6 @@ public class ChatConApp extends Application {
                                 "-fx-border-radius: 3px; " +
                                 "-fx-padding: 4px;"
                                 + "-fx-alignment: top-right; -fx-column-halignment: right;");
-
-                        //newMessage.setTextFill(Color.web("#ffffff"));
-
                         newMessage.setAlignment(Pos.TOP_RIGHT);
 
                         messageBox.setAlignment(Pos.TOP_RIGHT);
@@ -273,18 +258,13 @@ public class ChatConApp extends Application {
 
         Optional<String> result = null;
         boolean validUsername = false;
-        while (!validUsername) {
             result = dialog.showAndWait();
 
             if (result.isPresent()) {
                 nom = result.get();
-            } else {
-                Platform.exit();
-                System.exit(0);
-            }
+            } 
 
-         
-        }
+           
 
         user.login(nom);
 

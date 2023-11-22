@@ -1,20 +1,20 @@
 //HCN
-package serverrmi;
+package server;
 
 import java.rmi.Naming;
 import java.rmi.Remote;
 import java.rmi.registry.LocateRegistry;
 
-public class ChatConServidor {
+public class Server {
 
-    public ChatConServidor() {
+    public Server() {
         try {
             
             System.setProperty("java.rmi.server.hostname", "localhost");
             
             LocateRegistry.createRegistry(1099);
             
-            ChatConInterface server = new ChatCon();
+            Forum server = new ForumImp();
             Naming.bind("myServer", (Remote) server);
             System.out.println("Server running...");
         } catch (Exception e) {
@@ -23,6 +23,6 @@ public class ChatConServidor {
     }
 
     public static void main(String args[]) {
-        new ChatConServidor();
+        new Server();
     }
 }
